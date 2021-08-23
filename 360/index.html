@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+        .row.content {
+            height: 550px
+        }
+
+        /* Set gray background color and 100% height */
+        .sidenav {
+            background-color: #f1f1f1;
+            height: 100%;
+        }
+
+        /* On small screens, set height to 'auto' for the grid */
+        @media screen and (max-width: 767px) {
+            .row.content {
+                height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="background-color: aqua; display: inline-flex;">部屋タイプ選択</h1>
+
+    <div class="container-fluid">
+        <div class="row content">
+            <div class="col-sm-9">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td colspan="4">
+                                <img style="width: 50%; height: 50%" src="images/user1.jpg" alt="Responsive image">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>タイプ</td>
+                            <td colspan="3">
+                                <select id="picDD">
+                                    <option value="0">1K</option>
+                                    <option value="1">2LDK</option>
+                                    <option value="2">3DK</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>間取り</td>
+                            <td colspan="3">
+                                <div class="pr-price d0">1K</div>
+                                <div class="pr-price d1">2LDK</div>
+                                <div class="pr-price d2">3DK</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>専有面積</td>
+                            <td colspan="3">
+                                <div class="pr-price d0">80m2</div>
+                                <div class="pr-price d1">150m2</div>
+                                <div class="pr-price d2">300m2</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>その他面積</td>
+                            <td colspan="3">
+                                <div class="pr-price d0">9m2</div>
+                                <div class="pr-price d1">15m2</div>
+                                <div class="pr-price d2">50m2</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>備考</td>
+                            <td colspan="3">
+                                <div class="pr-price d0">駐車場あり、ペット可・相談、バリアフリー、土地所有権、即入居可、宅配ボックス、浴室乾燥機</div>
+                                <div class="pr-price d1">オール電化、ブロードバンド、バリアフリー、土地所有権、即入居可</div>
+                                <div class="pr-price d2">即入居可、宅配ボックス、浴室乾燥機、追い焚き</div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <br>
+            <div class="col-sm-3 sidenav hidden-xs" style="text-align: center;">
+                <svg onclick="myFunction()" xmlns="http://www.w3.org/2000/svg" width="116" height="116"
+                    fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0v-2z" />
+                    <path fill-rule="evenodd"
+                        d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                </svg>
+                <br>
+                <span>⁂アイコンをクリックを詳細のデータを表示します。</span>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+
+    var pictureList = [
+        "images/user1.jpg",
+        "images/user2.jpg",
+        "images/user3.jpg",];
+
+    $('#picDD').change(function () {
+        var val = parseInt($('#picDD').val());
+        $('img').attr("src", pictureList[val]);
+    });
+
+    $(function () {
+        $('.pr-price').hide();
+        $('.d0').show();
+
+        $('#picDD').on("change", function () {
+            $('.pr-price').hide();
+            $('.d' + $(this).val()).show();
+        }).val("0");
+    });
+
+    function myFunction() {
+
+        var selecttext = document.getElementById("picDD").value;
+        localStorage.setItem("passvalue", selecttext);
+
+        window.open('file:///C:/Users/NguyenDinhChien/Downloads/360/tesst360.html', '_blank');
+    }
+
+
+</script>

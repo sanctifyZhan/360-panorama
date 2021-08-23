@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Custom controls</title>
+    <link rel="stylesheet" href="https://cdn.pannellum.org/2.3/pannellum.css" />
+    <script type="text/javascript" src="https://cdn.pannellum.org/2.3/pannellum.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+    <script src="https://scripts.sirv.com/sirvjs/v3/sirv.js"></script>
+
+    <style>
+        #panorama {
+            width: 600px;
+            height: 400px;
+        }
+
+        #controls {
+            position: absolute;
+            bottom: 0;
+            z-index: 2;
+            text-align: center;
+            width: 75%;
+            left: 15%;
+            background: rgba(200, 200, 200, 0.8);
+        }
+
+        #controls2 {
+            position: absolute;
+            bottom: 0;
+            z-index: 2;
+            text-align: center;
+            width: 10%;
+            left: 45%;
+            background: rgba(200, 200, 200, 0.8);
+        }
+
+        /* arrow up
+        #triangle-up {
+      width: 0;
+      height: 0;
+      border-left: 50px solid transparent;
+      border-right: 50px solid transparent;
+      border-bottom: 100px solid red;
+    }
+    */
+
+        #controlsroom {
+            position: absolute;
+            top: 0;
+            z-index: 2;
+            text-align: center;
+            width: 17%;
+            right: 0%;
+            background: rgba(200, 200, 200, 0.8);
+        }
+
+        #controlsroom {
+            position: absolute;
+            top: 1%;
+            z-index: 2;
+            width: 17%;
+            right: 1%;
+            background: rgba(200, 200, 200, 0.8);
+        }
+
+        #mapright {
+            position: absolute;
+            top: 1%;
+            z-index: 2;
+            left: 1%;
+        }
+
+        .ctrl {
+            padding: 8px 5px;
+            width: 30px;
+            text-align: center;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .ctrl:hover {
+            background: rgba(200, 200, 200, 1);
+        }
+
+        #close1 {
+            position: absolute;
+            top: 0px;
+            left: 325px;
+            font-size: 32px;
+            cursor: pointer;
+            /* width: 25px;
+            background: rgba(200, 200, 200, 1);
+            */
+        }
+
+        #main {
+            position: absolute;
+            top: 15%;
+
+        }
+
+        /*画像上にボタンを配置させる用*/
+
+        /* 
+        .popup-btn {
+            width: 20px;
+            height: 20px;
+            background-color: blue;
+            position: fixed;
+            z-index: 999;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 5px solid white;
+            filter: brightness(0.85);
+
+        } */
+
+        .custom-hotspot {
+            height: 50px;
+            width: 50px;
+            background: #f00;
+        }
+
+        .custom-hotspot1 {
+            height: 50px;
+            width: 50px;
+            background: #f00;
+        }
+
+
+        div.custom-tooltip span {
+            visibility: hidden;
+            position: absolute;
+            border-radius: 3px;
+            background-color: #fff;
+            color: #000;
+            text-align: center;
+            max-width: 200px;
+            padding: 5px 10px;
+            margin-left: -220px;
+            cursor: default;
+        }
+
+        div.custom-tooltip:hover span {
+            visibility: visible;
+        }
+
+        div.custom-tooltip:hover span:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-width: 10px;
+            border-style: solid;
+            border-color: #fff transparent transparent transparent;
+            bottom: -20px;
+            left: -10px;
+            margin: 0 50%;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+    <div id="panorama" style="overflow:visible;">
+        <div id="controls">
+            <div class="ctrl" id="pan-pause">&#9208;</div>
+            <div class="ctrl" id="pan-play">&#8634;</div>
+            <div class="ctrl" id="pan-up">&#9650;</div>
+            <div class="ctrl" id="pan-down">&#9660;</div>
+            <div class="ctrl" id="pan-left">&#9664;</div>
+            <div class="ctrl" id="pan-right">&#9654;</div>
+            <div class="ctrl" id="zoom-in">&plus;</div>
+            <div class="ctrl" id="zoom-out">&minus;</div>
+            <div class="ctrl" id="fullscreen">&#x2922;</div>
+            <div class="ctrl" id="close" onclick="myFunction1()">&#11117;</div>
+        </div>
+
+        <div id="controls2" onclick="myFunction()">
+            <div class="ctrl2" id="big">&#9650;</div>
+        </div>
+
+        <div id="controlsroom">
+            <div class="ctrl3" id="roomchange" onclick="myFunction3()">部屋選択へ</div>
+        </div>
+
+        <div id="mapright">
+            <!--      <div class="ctrl3" id="mapright" onclick="myFunctionmap()"><b><span id="result"> </span> </b></div>  -->
+            <img id="my-image" src="" width="70" height="70" onclick="enlargeImg()" text-align="center">
+            <span id="close1" onClick="hideImg()"></span>
+        </div>
+        <!-- <article id="container">
+            <ul id="main">
+                <li>
+
+                    <div id='flooring_button' class='popup-btn'></div>
+                    <div id='fittings_button' class='popup-btn'></div>
+
+                </li>
+            </ul>
+        </article> -->
+
+
+    </div>
+
+
+    <script>
+        document.getElementById("controls").style.display = "none";
+        // Create viewer
+        viewer = pannellum.viewer('panorama', {
+            "default": {
+                "author": "NDC",
+                "firstScene": "AptoB",
+                "autoLoad": true
+            },
+            "scenes": {
+                "AptoA": {
+                    "title": "A",
+                    "type": "equirectangular",
+                    "panorama": "https://c1.staticflickr.com/5/4302/35137573294_1287bfd0ae_k.jpg",
+                    "autoLoad": true,
+                    "showControls": false,
+                    "hotSpots": [
+                        {
+                            "pitch": 14.1,
+                            "yaw": 1.5,
+                            "cssClass": "custom-hotspot",
+                            "createTooltipFunc": hotspot,
+                            "text": "Spring House or Dairy", // chu tren cai nut bam
+                            "createTooltipArgs": "Baltimore Museum of Art",
+                            "URL": "https://artbma.org/"
+                        },
+                        {
+                            "pitch": -9.4,
+                            "yaw": 222.6,
+                            "cssClass": "custom-hotspot",
+                            "createTooltipFunc": hotspot,
+                            "createTooltipArgs": "Art Museum Drive",
+                            "sceneId": "AptoB"  // chuyen link sceneId
+                        },
+                        {
+                            "pitch": -0.9,
+                            "yaw": 144.4,
+                            "cssClass": "custom-hotspot",
+                            "createTooltipFunc": hotspot,
+                            "createTooltipArgs": "North Charles Street"
+                        }
+                    ]
+                },
+                "AptoB": {
+                    "title": "",
+                    "type": "equirectangular",
+                    "panorama": "https://upload.wikimedia.org/wikipedia/commons/2/23/Tokyo_Minato_Panorama.jpg",
+                    "autoLoad": true,
+                    "showControls": false,
+                    "hotSpots": [
+                        {
+                            "id": "chiena",
+                            "pitch": 14.1,
+                            "yaw": 1.5,
+                            //   "cssClass": "custom-hotspot1",
+                            //   "type": "equirectangular",
+                            "type": "info",
+                            // "type": "scene", icon mui ten
+                            "createTooltipFunc": hotspot,
+                            "createTooltipArgs": "Baltimore Museum of Art texxt chien",
+                            "sceneId": "AptoA"
+                        },
+                        {
+                            "pitch": -9.4,
+                            "yaw": 222.6,
+                            "cssClass": "custom-hotspot",
+                            "createTooltipFunc": hotspot,
+                            "createTooltipArgs": "Art Museum Drive"
+                        },
+                        {
+                            "pitch": -0.9,
+                            "yaw": 144.4,
+                            "cssClass": "custom-hotspot",
+                            "createTooltipFunc": hotspot,
+                            "createTooltipArgs": "North Charles Street"
+                        }
+                    ]
+                },
+            }
+        });
+
+        $('#panorama-1').on("shown", function () {
+            // load scene "AptoD"
+            viewer.loadScene('AptoA');
+        });
+
+
+        $('#chiena').on("click", function () {
+            alert("sida");
+        });
+
+
+
+
+        // Hot spot creation function
+        function hotspot(hotSpotDiv, args) {
+            hotSpotDiv.classList.add('custom-tooltip');
+            var span = document.createElement('span');
+            span.innerHTML = args;
+            hotSpotDiv.appendChild(span);
+            span.style.width = span.scrollWidth - 20 + 'px';
+            span.style.marginLeft = -(span.scrollWidth - hotSpotDiv.offsetWidth) / 2 + 'px';
+            span.style.marginTop = -span.scrollHeight - 12 + 'px';
+        }
+
+        // Make buttons work
+        document.getElementById('pan-pause').addEventListener('click', function (e) {
+            viewer.stopAutoRotate();
+        });
+        document.getElementById('pan-play').addEventListener('click', function (e) {
+            viewer.startAutoRotate(8);
+        });
+        document.getElementById('pan-up').addEventListener('click', function (e) {
+            viewer.setPitch(viewer.getPitch() + 10);
+        });
+        document.getElementById('pan-down').addEventListener('click', function (e) {
+            viewer.setPitch(viewer.getPitch() - 10);
+        });
+        document.getElementById('pan-left').addEventListener('click', function (e) {
+            viewer.setYaw(viewer.getYaw() - 10);
+        });
+        document.getElementById('pan-right').addEventListener('click', function (e) {
+            viewer.setYaw(viewer.getYaw() + 10);
+        });
+        document.getElementById('zoom-in').addEventListener('click', function (e) {
+            viewer.setHfov(viewer.getHfov() - 10);
+        });
+        document.getElementById('zoom-out').addEventListener('click', function (e) {
+            viewer.setHfov(viewer.getHfov() + 10);
+        });
+        document.getElementById('fullscreen').addEventListener('click', function (e) {
+            viewer.toggleFullscreen();
+        });
+
+        // function MouseOver() {
+        //     document.getElementById("controls").style.display = "inline-block";
+        //     document.getElementById("controls2").style.display = "none";
+        // }
+
+        // function MouseOut() {
+        //     document.getElementById("controls").style.display = "none";
+        //     document.getElementById("controls2").style.display = "inline-block";
+        // }
+
+        function myFunction() {
+
+            document.getElementById("controls").style.display = "inline-block";
+            document.getElementById("controls2").style.display = "none";
+        }
+
+        function myFunction1() {
+
+            document.getElementById("controls").style.display = "none";
+            document.getElementById("controls2").style.display = "inline-block";
+        }
+
+        function myFunction3() {
+
+            window.open('file:///C:/Users/NguyenDinhChien/Downloads/360/index.html', '_blank');
+        }
+
+        //   document.getElementById("result").innerHTML = localStorage.getItem("passvalue");
+        var pass = localStorage.getItem("passvalue");
+
+        // onmouseover="javascript: MouseOver();"
+        // onmouseout="javascript: MouseOut();"
+
+        // let myPix = new Array("images/user1.jpg", "images/user2.jpg", "images/user3.jpg");
+
+        if (pass == 0) {
+            document.getElementById("my-image").src = "images/user1.jpg";
+        }
+        else if (pass == 1) {
+            document.getElementById("my-image").src = "images/user2.jpg"
+        }
+        else if (pass == 2) {
+            document.getElementById("my-image").src = "images/user3.jpg";
+        }
+
+        img = document.getElementById("my-image");
+        // Function to increase image size
+        function enlargeImg() {
+            // Set image size to 1.5 times original
+            img.style.transform = "scale(5)";
+
+            //	$("#my-image" ).css({width: screen.width, height: screen.height});
+            $("#my-image").animate({ 'marginLeft': '200%' }, 0);
+            $("#my-image").animate({ 'marginTop': '200%' }, 0);
+
+
+
+            // img.style.left = 200 + "px";
+            // Animation effect 
+            img.style.transition = "transform 0.25s ease";
+
+            document.getElementById("close1").innerHTML = "X";
+            document.getElementById("close1").style.display = "inline-block";
+
+
+        }
+
+        function hideImg() {
+            img.style.transform = "scale(1)";
+            document.getElementById("close1").style.display = "none";
+            $("#my-image").animate({ 'marginLeft': '0%' }, 0);
+            $("#my-image").animate({ 'marginTop': '0%' }, 0);
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="exponential.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <select id="myselection">
+        <option>Select Option</option>
+        <option value="One">Manager</option>
+        <option value="Two">HR</option>
+        <option value="Three">Developer</option>
+    </select>
+    <div id="showOne" class="myDiv">
+        <img src="/images/user1.jpg" alt="Manager"/><span>Manager</span>
+    </div>
+    <div id="showTwo" class="myDiv">
+        <img src="/images/user2.jpg" alt="HR"/><span>HR</span>
+    </div>
+    <div id="showThree" class="myDiv">
+        <img src="/images/user3.jpg" alt="Developer"/>
+    
+
+</body>
+</html>
+
+<script>
+    $(document).ready(function(){
+        $('#myselection').on('change', function(){
+            var demovalue = $(this).val(); 
+            $("div.myDiv").hide();
+            $("#show"+demovalue).show();
+        });
+    });
+    </script>
